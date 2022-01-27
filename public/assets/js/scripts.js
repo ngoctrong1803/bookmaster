@@ -5,22 +5,315 @@
     */
     // 
 // Scripts
-// 
+    // handle notification 
+    $(document).ready(function() {
 
-window.addEventListener('DOMContentLoaded', event => {
+        // hide error message
+        setTimeout(function() {
+            $('#errormessage').fadeOut('fast');
+        }, 3000); // <-- time in milliseconds
 
-    // Toggle the side navigation
-    const sidebarToggle = document.body.querySelector('#sidebarToggle');
-    if (sidebarToggle) {
-        // Uncomment Below to persist sidebar toggle between refreshes
-        // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-        //     document.body.classList.toggle('sb-sidenav-toggled');
-        // }
-        sidebarToggle.addEventListener('click', event => {
-            event.preventDefault();
-            document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-        });
+        // handle Notification
+        var option={
+            animation: true,
+            autohide: true, 
+            delay: 2000
+        }
+
+        var Notification = document.getElementById('toastNotification'); // select id of toast
+        var bsNotification = new bootstrap.Toast(Notification, option);
+        bsNotification.show();  
+    });
+
+    // sidebar evetn
+    window.addEventListener('DOMContentLoaded', event => {
+        // Toggle the side navigation
+        const sidebarToggle = document.body.querySelector('#sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', event => {
+                event.preventDefault();
+                document.body.classList.toggle('sb-sidenav-toggled');
+                localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+            });
+        }
+
+    });
+
+    //---------------------------------handle mtbooks-----------------------------------------
+    function showError(key, mess){
+        return document.getElementById('err_' + key).innerHTML = mess;
     }
 
-});
+    function getValueById(id){
+        return document.getElementById(id).value.trim();
+    }
+
+    function checkYear(year){
+        if (!(Number.isInteger(Number(year))) || Number(year)< 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function checkMonth(month){
+        if (!(Number.isInteger(Number(month))) || Number(month)< 1 || Number(month)> 12){
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
+    function checkLeapYear(year){
+        if (Number(year) % 400 == 0) 
+            return true; 
+        if (Number(year) % 4 == 0 && Number(year) % 100 != 0) 
+            return true;
+        return false; 
+
+    }
+
+    function checkDay(day, month, year){
+        if (!(Number.isInteger(Number(day))) || Number(day)< 1 || Number(day)> 31){
+            return false;
+        }else{   
+            var month30= [4, 6, 9, 11];
+            if(month30.indexOf(Number(month)) != -1){
+                // if month have 30 day
+                if(Number(day)> 30){
+                    return false;
+                }
+            }else if(Number(month) == 2){
+                if(!checkLeapYear(year)){
+                    if(Number(day)> 28){
+                    return false;
+                    }
+                }else{
+                    if(Number(day)> 29){
+                    return false;
+                    }
+                }
+            }
+
+
+        }
+        return true;
+    }
+
+    function validateAdd(){
+        var flag = true;
+        // book id
+        //var bookid= document.getElementById("form_txtbookid").value;
+
+        var bookid= getValueById("form_txtbookid");
+        // book title
+        var booktitle = getValueById("booktitle");
+        // author name
+        var authorname = getValueById("authorname");
+        // publisher
+        var publisher = getValueById("publisher");
+        // year
+        var year = getValueById("year");
+        // month
+        var month = getValueById("month");
+        // day
+        var day = getValueById("day");
+
+        // reset Notification 
+        showError("bookid", "");
+        showError("booktitle", "");
+        showError("authorname", "");
+        showError("publisher", "");
+        showError("year", "");
+        showError("month", "");
+        showError("day", "");
+        
+        
+
+        // check book id
+        if(bookid == ''){
+            flag = false;
+            showError("bookid", "本IDを入力してください。");
+        }
+        else if(bookid.length > 4){
+            flag = false;
+            showError("bookid", "本IDは半角英数字で入力してください。");
+        }
+
+        //check book title
+        if(booktitle == ''){
+            flag = false;
+            showError("booktitle", "本タイトルを入力してください。");
+        }
+
+        // check author name
+        if(authorname == ''){
+            flag = false;
+            showError("authorname", "著者名を入力してください。");
+        }
+
+        // check publisher
+        if(publisher == ''){
+            flag = false;
+            showError("publisher", "出版社を入力してください。");
+        }
+
+        //check empty date
+        if(year == ''){
+            flag = false;
+            showError("year", "出版年月日を入力してください。");
+        }else if (!checkYear(year)){
+            flag = false;
+            showError("year", "出版年月日は半角数字で入力してください。");
+        }
+
+        if(month == ''){
+            flag = false;
+            showError("month", "出版年月日を入力してください。");
+        }else if (!checkMonth(month)){
+            flag = false;
+            showError("month", "出版年月日は半角数字で入力してください。");
+        }
+
+        if(day == ''){
+            flag = false;
+            showError("day", "出版年月日を入力してください。");
+        }else if (!checkDay(day, month, year)){
+            flag = false;
+            showError("day", "出版年月日は半角数字で入力してください。");
+        }
+        return flag;
+        
+    }
+
+    function validateUpdate(){
+        var flag = true;
+        // book id
+        var bookid= getValueById("form_txtbookid");
+        // book title
+        var booktitle = getValueById("booktitle");
+        // author name
+        var authorname = getValueById("authorname");
+        // publisher
+        var publisher = getValueById("publisher");
+        // year
+        var year = getValueById("year");
+        // month
+        var month = getValueById("month");
+        // day
+        var day = getValueById("day");
+
+        // reset Notification 
+        showError("bookid", "");
+        showError("booktitle", "");
+        showError("authorname", "");
+        showError("publisher", "");
+        showError("year", "");
+        showError("month", "");
+        showError("day", "");
+        // check book id
+        if(bookid == ''){
+            flag = false;
+            showError("bookid", "本IDを入力してください。");
+        }
+        else if(bookid.length > 4){
+            flag = false;
+            showError("bookid", "本IDは半角英数字で入力してください。");
+        }
+        //check book title
+        if(booktitle == ''){
+            flag = false;
+            showError("booktitle", "本タイトルを入力してください。");
+        }
+
+        // check author name
+        if(authorname == ''){
+            flag = false;
+            showError("authorname", "著者名を入力してください。");
+        }
+
+        // check publisher
+        if(publisher == ''){
+            flag = false;
+            showError("publisher", "出版社を入力してください。");
+        }
+
+        //check empty date
+        if(year == ''){
+            flag = false;
+            showError("year", "出版年月日を入力してください。");
+        }else if (!checkYear(year)){
+            flag = false;
+            showError("year", "出版年月日は半角数字で入力してください。");
+        }
+
+        if(month == ''){
+            flag = false;
+            showError("month", "出版年月日を入力してください。");
+        }else if (!checkMonth(month)){
+            flag = false;
+            showError("month", "出版年月日は半角数字で入力してください。");
+        }
+
+        if(day == ''){
+            flag = false;
+            showError("day", "出版年月日を入力してください。");
+        }else if (!checkDay(day, month, year)){
+            flag = false;
+            showError("day", "出版年月日は半角数字で入力してください。");
+        }
+        
+        return flag;
+
+    }
+
+    function validateFind(){
+        var flag = true;
+        var bookid= getValueById("form_txtbookid");
+        if(bookid == ""){
+            alert("本IDを入力してください。");
+            flag = false;
+        }
+        else if(bookid.length != 4 ){
+            alert("本IDは半角英数字で入力してください。");
+            flag = false;
+        }
+        return flag;
+    }
+
+    function validateDelete(){
+
+        var flag = true;
+        var bookid= getValueById("form_txtbookid");
+        if(bookid == ""){
+            alert("本IDを入力してください。");
+            flag = false;
+        }
+        else if(bookid.length != 4 ){
+            alert("本IDは半角英数字で入力してください。");
+            flag = false;
+        }
+        return flag;
+
+    }
+    function handleclear(){
+        // book id
+        document.getElementById("form_txtbookid").value = "";
+        // book title
+        document.getElementById("booktitle").value = "";
+        // author name
+        document.getElementById("authorname").value = "";
+        // publisher
+        document.getElementById("publisher").value = "";
+        // year
+        document.getElementById("year").value = "";
+        // month
+        document.getElementById("month").value = "";
+        // day
+        document.getElementById("day").value = "";
+        return false;
+
+    }
+
+

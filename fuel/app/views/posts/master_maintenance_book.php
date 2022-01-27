@@ -1,7 +1,7 @@
-       
+ 
         <div class="container" style="margin-top: 20px">
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
             <!--form CURD book-->
             <?= Form::open(array('action'=>'posts/CRUD', 'method'=>'post'));?>
             <div class="row g-3">
@@ -16,7 +16,7 @@
                             <h1>本マスタメンテ</h1>
                         </div>
                         <div class="col" style="text-align: end">
-                            <a href="#">閉じる</a>
+                            <a href="/home">閉じる</a>
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                             class="col-md-6"
                             style="display: flex; align-items: flex-end"
                         >
-                            <?= Form::button('find', '検索', array("value" => "btnfind",'id' => 'btnfind','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                            <?= Form::button('find', '検索', array("onclick"=>"return validateFind()", "value" => "btnfind",'id' => 'btnfind','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                         </div> 
                 </div>
                 <span style="color: red;" id="err_bookid"></span>
@@ -118,7 +118,6 @@
                                     <span style="color: red;" id="err_day"></span>
                             </div>
                         </div>
-             
                         <!--attribute of book-->
                     
                 <?php }else {?>
@@ -201,90 +200,40 @@
                             </div>
                         </div>
                         <!-------------------------------------------------------------->
-                        <!--attribute of book-->
-                    
+                        <!--attribute of book-->    
                 <?php }?>
-                <!--handle attribute of book-->
 
                
 
-
+            <!--form CURD book-->
                 <div class="col-12" style="display: flex">
                     <div class="col-4"></div>
                     <div
                         class="col-8"
                         style="display: flex; justify-content: flex-end"
                     >
-                        <!-- <button
-                            style="margin-left: 15px"
-                            type="submit"
-                            class="btn btn-secondary"
-                        >
-                            追加(Add)
-                        </button> -->
-                        <?= Form::button('add', '追加(Add)', array("onclick"=>"return validateFind()", "value" => "btnadd';" ,'id' => 'btnadd','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
-                        <!-- <button
-                            style="margin-left: 15px"
-                            type="submit"
-                            class="btn btn-secondary"
-                        >
-                            更新(Update)
-                        </button> -->
+                        <?= Form::button('add', '追加(Add)', array("onclick"=>"return validateAdd()", "value" => "btnadd';" ,'id' => 'btnadd','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                      
                         <?= Form::button('update', '更新(Update)', array("onclick"=>"return validateUpdate()", "value" => "btnupdate';" ,'id' => 'btnupdate','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
-                        <!-- <button
-                            style="margin-left: 15px"
-                            type="submit"
-                            class="btn btn-secondary"
-                        >
-                            削除(Delete)
-                        </button> -->
-                        <?= Form::button('delete', '検索(Delete)', array("value" => "btndelete';" ,'id' => 'btndelete','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
-                        <!-- <button
-                            style="margin-left: 15px"
-                            type="submit"
-                            class="btn btn-secondary"
-                        >
-                            クリア(Clear)
-                        </button> -->
-                        <?= Form::button('clear', 'クリア(Clear)', array("value" => "btnclear';" ,'id' => 'btnclear','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                       
+                        <?= Form::button('delete', '検索(Delete)', array("onclick"=>"return validateDelete()", "value" => "btndelete';" ,'id' => 'btndelete','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                     
+                        <?= Form::button('clear', 'クリア(Clear)', array("onclick"=>"return handleclear()", "value" => "btnclear';" ,'id' => 'btnclear', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                     </div>
                 </div>
             </div>
             <?= Form::close('posts/CRUD')?>
-                <!--form CURD book-->
+            
             </div>
 
-            <div class="col-4">
-                <h3>本のリスト</h3>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                        <th>番号</th>
-                        <th>ID</th>
-                        <th>本の名前</th>
-                        </tr>  
-                    </thead>
-                    <tbody>
-                        <?php $i=1;
-                        foreach($mtbooks as $mtbook):?>
-                        <tr>
-                        <td><?php echo $i; ?></td>
-                        <td><?php echo $mtbook->id; ?></td>
-                        <td><?php echo $mtbook->book_title; ?></td>
-                        </tr>
-                        <?php  $i++; ?>
-                        <?php endforeach;?>
-                        
-                    </tbody>
-                </table>
-            </div>
+         
            
              <!--message-->
                 <!--error-->
                 <?php if(isset($error_mess)){?>
                     <div class="toast" id="toastNotification" style="font-size: 16px; position: absolute; top:0px; right:15px;">
                        <div class="toast-header" style="background-color: #f84f31; color:#e8eaee">
-                           <Strong class="mr-auto">Thông báo!</Strong>
+                           <Strong class="mr-auto">メッセージ</Strong>
                            <i class="bi bi-bell-fill"></i>
                        </div>
                        <div class="toast-body">
@@ -311,242 +260,5 @@
             <!--message-->
         </div>
         </div>
-        <script>
-         //--------------------------------------------------------------------------
-            function showError(key, mess){
-                return document.getElementById('err_' + key).innerHTML = mess;
-            }
-
-            function getValueById(id){
-                return document.getElementById(id).value.trim();
-            }
-
-            function checkYear(year){
-                if (!(Number.isInteger(Number(year))) || Number(year)< 0){
-                    return false;
-                }else{
-                    return true;
-                }
-            }
-
-            function checkMonth(month){
-                if (!(Number.isInteger(Number(month))) || Number(month)< 1 || Number(month)> 12){
-                    return false;
-                }else{
-                    return true;
-                }
-
-            }
-
-            function checkLeapYear(year){
-                if (Number(year) % 400 == 0) 
-                    return true; 
-                if (Number(year) % 4 == 0 && Number(year) % 100 != 0) 
-                    return true;
-                return false; 
-
-            }
-
-            function checkDay(day, month, year){
-                if (!(Number.isInteger(Number(day))) || Number(day)< 1 || Number(day)> 31){
-                    return false;
-                }else{   
-                    var month30= [4, 6, 9, 11];
-                    if(month30.indexOf(Number(month)) != -1){
-                        // if month have 30 day
-                        if(Number(day)> 30){
-                            return false;
-                        }
-                    }else if(Number(month) == 2){
-                        if(!checkLeapYear(year)){
-                            if(Number(day)> 28){
-                            return false;
-                            }
-                        }else{
-                            if(Number(day)> 29){
-                            return false;
-                            }
-                        }
-                    }
-
-
-                }
-                return true;
-            }
-
-            function validateFind(){
-                var flag = true;
-                // book id
-                //var bookid= document.getElementById("form_txtbookid").value;
-
-                var bookid= getValueById("form_txtbookid");
-                // book title
-                var booktitle = getValueById("booktitle");
-                // author name
-                var authorname = getValueById("authorname");
-                // publisher
-                var publisher = getValueById("publisher");
-                // year
-                var year = getValueById("year");
-                // month
-                var month = getValueById("month");
-                // day
-                var day = getValueById("day");
-
-                // reset Notification 
-                showError("bookid", "");
-                showError("booktitle", "");
-                showError("authorname", "");
-                showError("publisher", "");
-                showError("year", "");
-                showError("month", "");
-                showError("day", "");
-                
-               
-
-                // check book id
-                if(bookid == ''){
-                    flag = false;
-                    showError("bookid", "Vui lòng nhập mã sách!");
-                }
-                else if(bookid.length > 4){
-                    flag = false;
-                    showError("bookid", "Mã sách không đúng định dạng!");
-                }
-
-                //check book title
-                if(booktitle == ''){
-                    flag = false;
-                    showError("booktitle", "Vui lòng nhập tiêu đề!");
-                }
-
-                // check author name
-                if(authorname == ''){
-                    flag = false;
-                    showError("authorname", "Vui lòng nhập tên tác giả!");
-                }
-
-                // check publisher
-                if(publisher == ''){
-                    flag = false;
-                    showError("publisher", "Vui lòng nhập nhà xuất bản!");
-                }
-
-                //check empty date
-                if(year == ''){
-                    flag = false;
-                    showError("year", "Vui lòng nhập năm!");
-                }else if (!checkYear(year)){
-                    flag = false;
-                    showError("year", "Năm không đúng định dạng!");
-                }
-
-                if(month == ''){
-                    flag = false;
-                    showError("month", "Vui lòng nhập tháng");
-                }else if (!checkMonth(month)){
-                    flag = false;
-                    showError("month", "Tháng không đúng định dạng!");
-                }
-
-                if(day == ''){
-                    flag = false;
-                    showError("day", "Vui lòng nhập ngày");
-                }else if (!checkDay(day, month, year)){
-                    flag = false;
-                    showError("day", "Ngày không đúng định dạng!");
-                }
-   
-                return flag;
-                
-            }
-
-            function validateUpdate(){
-                var flag = true;
-                // book id
-                //var bookid= document.getElementById("form_txtbookid").value;
-
-                var bookid= getValueById("form_txtbookid");
-                // book title
-                var booktitle = getValueById("booktitle");
-                // author name
-                var authorname = getValueById("authorname");
-                // publisher
-                var publisher = getValueById("publisher");
-                // year
-                var year = getValueById("year");
-                // month
-                var month = getValueById("month");
-                // day
-                var day = getValueById("day");
-
-                // reset Notification 
-                showError("bookid", "");
-                showError("booktitle", "");
-                showError("authorname", "");
-                showError("publisher", "");
-                showError("year", "");
-                showError("month", "");
-                showError("day", "");
-                // check book id
-                if(bookid == ''){
-                    flag = false;
-                    showError("bookid", "Vui lòng nhập mã sách!");
-                }
-                else if(bookid.length > 4){
-                    flag = false;
-                    showError("bookid", "Mã sách không đúng định dạng!");
-                }
-                //check book title
-                if(booktitle == ''){
-                    flag = false;
-                    showError("booktitle", "Vui lòng nhập tiêu đề!");
-                }
-
-                // check author name
-                if(authorname == ''){
-                    flag = false;
-                    showError("authorname", "Vui lòng nhập tên tác giả!");
-                }
-
-                // check publisher
-                if(publisher == ''){
-                    flag = false;
-                    showError("publisher", "Vui lòng nhập nhà xuất bản!");
-                }
-
-                //check empty date
-                if(year == ''){
-                    flag = false;
-                    showError("year", "Vui lòng nhập năm!");
-                }else if (!checkYear(year)){
-                    flag = false;
-                    showError("year", "Năm không đúng định dạng!");
-                }
-
-                if(month == ''){
-                    flag = false;
-                    showError("month", "Vui lòng nhập tháng");
-                }else if (!checkMonth(month)){
-                    flag = false;
-                    showError("month", "Tháng không đúng định dạng!");
-                }
-
-                if(day == ''){
-                    flag = false;
-                    showError("day", "Vui lòng nhập ngày");
-                }else if (!checkDay(day, month, year)){
-                    flag = false;
-                    showError("day", "Ngày không đúng định dạng!");
-                }
-                
-                return flag;
-
-            }
-
-
-
-         //--------------------------------------------------------------------------   
-
-        </script>
+        
         

@@ -146,56 +146,6 @@
                 </footer>
             </div>
         </div>
-        <script language = "javascript">
-         $(document).ready(function() {
-
-            // hide error message
-            setTimeout(function() {
-                $('#errormessage').fadeOut('fast');
-            }, 3000); // <-- time in milliseconds
-
-            // handle Notification
-            var option={
-                animation: true,
-                autohide: true,
-                delay: 2000
-            }
-
-            var Notification = document.getElementById('toastNotification'); // select id of toast
-            var bsNotification = new bootstrap.Toast(Notification, option);
-            bsNotification.show();  
-
-            // use ajax to handle CRUD (Unfinished)
-                // $("#btn_find_by_id").on("click", function(event) {
-                    
-                // $.ajax ({
-                //     url:        '/ajax/index',
-                //     type:       'POST',
-                //     dataType:   'json',
-                //     async:      true,
-
-                //     success: function(data, status) {
-                //         alert('đã chạy ajax thành công');
-                //         //  var e = $('<tr><th>Name</th><th>Age</th></tr>');
-                //         //  $('#employee').html('');
-                //         //  $('#employee').append(e);
-                        
-                //         //  for(i = 0; i < data.length; i++) {
-                //         //     employee = data[i];
-                //         //     var e = $('<tr><td id = "name"></td><td id = "age"></td></tr>');
-                //         //     $('#name', e).html(employee['id']);
-                //         //     $('#age', e).html(employee['book_title']);
-                //         //     $('#employee').append(e);
-                //         //  }
-                //     },
-                    
-                //     error : function(xhr, textStatus, errorThrown) {
-                //         alert('Ajax request failed!'+ xhr+"/"+ textStatus+"/"+ errorThrown+"/");
-                //     }
-                // });
-                // });  
-         });
-      </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
 
