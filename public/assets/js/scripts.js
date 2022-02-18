@@ -101,197 +101,210 @@
         return true;
     }
 
-    function validateAdd(){
-        var flag = true;
-        // book id
-        //var bookid= document.getElementById("form_txtbookid").value;
+    function handleAdd(){
+        //change action
+            const formAdd = document.getElementById('crud_form');
+            formAdd.action = "http://foisweb.com/posts/create";
 
-        var bookid= getValueById("form_txtbookid");
-        // book title
-        var booktitle = getValueById("booktitle");
-        // author name
-        var authorname = getValueById("authorname");
-        // publisher
-        var publisher = getValueById("publisher");
-        // year
-        var year = getValueById("year");
-        // month
-        var month = getValueById("month");
-        // day
-        var day = getValueById("day");
+        // validate
+            var flag = true;
+            // book id
+            //var bookid= document.getElementById("form_txtbookid").value;
 
-        // reset Notification 
-        showError("bookid", "");
-        showError("booktitle", "");
-        showError("authorname", "");
-        showError("publisher", "");
-        showError("year", "");
-        showError("month", "");
-        showError("day", "");
-        
-        
+            var bookid= getValueById("form_txtbookid");
+            // book title
+            var booktitle = getValueById("booktitle");
+            // author name
+            var authorname = getValueById("authorname");
+            // publisher
+            var publisher = getValueById("publisher");
+            // year
+            var year = getValueById("year");
+            // month
+            var month = getValueById("month");
+            // day
+            var day = getValueById("day");
 
-        // check book id
-        if(bookid == ''){
-            flag = false;
-            showError("bookid", "本IDを入力してください。");
-        }
-        else if(bookid.length > 4){
-            flag = false;
-            showError("bookid", "本IDは半角英数字で入力してください。");
-        }
+            // reset Notification 
+            showError("bookid", "");
+            showError("booktitle", "");
+            showError("authorname", "");
+            showError("publisher", "");
+            showError("year", "");
+            showError("month", "");
+            showError("day", "");
+            
+            
 
-        //check book title
-        if(booktitle == ''){
-            flag = false;
-            showError("booktitle", "本タイトルを入力してください。");
-        }
+            // check book id
+            if(bookid == ''){
+                flag = false;
+                showError("bookid", "本IDを入力してください。"); //MSG 01
+            }
+            else if(bookid.length > 4){
+                flag = false;
+                showError("bookid", "本IDは半角英数字で入力してください。"); //MSG 02
+            }
 
-        // check author name
-        if(authorname == ''){
-            flag = false;
-            showError("authorname", "著者名を入力してください。");
-        }
+            //check book title
+            if(booktitle == ''){
+                flag = false;
+                showError("booktitle", "本タイトルを入力してください。"); //MSG 06
+            }
 
-        // check publisher
-        if(publisher == ''){
-            flag = false;
-            showError("publisher", "出版社を入力してください。");
-        }
+            // check author name
+            if(authorname == ''){
+                flag = false;
+                showError("authorname", "著者名を入力してください。"); //MSG 07
+            }
 
-        //check empty date
-        if(year == ''){
-            flag = false;
-            showError("year", "出版年月日を入力してください。");
-        }else if (!checkYear(year)){
-            flag = false;
-            showError("year", "出版年月日は半角数字で入力してください。");
-        }
+            // check publisher
+            if(publisher == ''){
+                flag = false;
+                showError("publisher", "出版社を入力してください。"); //MSG 08
+            }
 
-        if(month == ''){
-            flag = false;
-            showError("month", "出版年月日を入力してください。");
-        }else if (!checkMonth(month)){
-            flag = false;
-            showError("month", "出版年月日は半角数字で入力してください。");
-        }
+            //check empty date
+            if(year == ''){
+                flag = false;
+                showError("year", "出版年月日を入力してください。"); //MSG 09
+            }else if (!checkYear(year)){
+                flag = false;
+                showError("year", "出版年月日は半角数字で入力してください。");//MSG 10
+            }
 
-        if(day == ''){
-            flag = false;
-            showError("day", "出版年月日を入力してください。");
-        }else if (!checkDay(day, month, year)){
-            flag = false;
-            showError("day", "出版年月日は半角数字で入力してください。");
-        }
+            if(month == ''){
+                flag = false;
+                showError("month", "出版年月日を入力してください。"); //MSG 09
+            }else if (!checkMonth(month)){
+                flag = false;
+                showError("month", "出版年月日は半角数字で入力してください。");//MSG 10
+            }
+
+            if(day == ''){
+                flag = false;
+                showError("day", "出版年月日を入力してください。");//MSG 09
+            }else if (!checkDay(day, month, year)){
+                flag = false;
+                showError("day", "出版年月日は半角数字で入力してください。");//MSG 10
+            }
         return flag;
         
     }
 
-    function validateUpdate(){
-        var flag = true;
-        // book id
-        var bookid= getValueById("form_txtbookid");
-        // book title
-        var booktitle = getValueById("booktitle");
-        // author name
-        var authorname = getValueById("authorname");
-        // publisher
-        var publisher = getValueById("publisher");
-        // year
-        var year = getValueById("year");
-        // month
-        var month = getValueById("month");
-        // day
-        var day = getValueById("day");
+    function handleUpdate(){
+        // change action
+            const formAdd = document.getElementById('crud_form');
+            formAdd.action = "http://foisweb.com/posts/update";
+        // validate
+            var flag = true;
+            // book id
+            var bookid= getValueById("form_txtbookid");
+            // book title
+            var booktitle = getValueById("booktitle");
+            // author name
+            var authorname = getValueById("authorname");
+            // publisher
+            var publisher = getValueById("publisher");
+            // year
+            var year = getValueById("year");
+            // month
+            var month = getValueById("month");
+            // day
+            var day = getValueById("day");
 
-        // reset Notification 
-        showError("bookid", "");
-        showError("booktitle", "");
-        showError("authorname", "");
-        showError("publisher", "");
-        showError("year", "");
-        showError("month", "");
-        showError("day", "");
-        // check book id
-        if(bookid == ''){
-            flag = false;
-            showError("bookid", "本IDを入力してください。");
-        }
-        else if(bookid.length > 4){
-            flag = false;
-            showError("bookid", "本IDは半角英数字で入力してください。");
-        }
-        //check book title
-        if(booktitle == ''){
-            flag = false;
-            showError("booktitle", "本タイトルを入力してください。");
-        }
+            // reset Notification 
+            showError("bookid", "");
+            showError("booktitle", "");
+            showError("authorname", "");
+            showError("publisher", "");
+            showError("year", "");
+            showError("month", "");
+            showError("day", "");
+            // check book id
+            if(bookid == ''){
+                flag = false;
+                showError("bookid", "本IDを入力してください。"); // MSG 01
+            }
+            else if(bookid.length > 4){
+                flag = false;
+                showError("bookid", "本IDは半角英数字で入力してください。"); // MSG 02
+            }
+            //check book title
+            if(booktitle == ''){
+                flag = false;
+                showError("booktitle", "本タイトルを入力してください。"); // MSG 06
+            }
 
-        // check author name
-        if(authorname == ''){
-            flag = false;
-            showError("authorname", "著者名を入力してください。");
-        }
+            // check author name
+            if(authorname == ''){
+                flag = false;
+                showError("authorname", "著者名を入力してください。"); // MSG 07
+            }
 
-        // check publisher
-        if(publisher == ''){
-            flag = false;
-            showError("publisher", "出版社を入力してください。");
-        }
+            // check publisher
+            if(publisher == ''){
+                flag = false;
+                showError("publisher", "出版社を入力してください。"); // MSG 08
+            }
 
-        //check empty date
-        if(year == ''){
-            flag = false;
-            showError("year", "出版年月日を入力してください。");
-        }else if (!checkYear(year)){
-            flag = false;
-            showError("year", "出版年月日は半角数字で入力してください。");
-        }
+            //check empty date
+            if(year == ''){
+                flag = false;
+                showError("year", "出版年月日を入力してください。"); // MSG 09
+            }else if (!checkYear(year)){
+                flag = false;
+                showError("year", "出版年月日は半角数字で入力してください。"); //MSG 10
+            }
 
-        if(month == ''){
-            flag = false;
-            showError("month", "出版年月日を入力してください。");
-        }else if (!checkMonth(month)){
-            flag = false;
-            showError("month", "出版年月日は半角数字で入力してください。");
-        }
+            if(month == ''){
+                flag = false;
+                showError("month", "出版年月日を入力してください。"); // MSG 09
+            }else if (!checkMonth(month)){
+                flag = false;
+                showError("month", "出版年月日は半角数字で入力してください。"); // MSG 10
+            }
 
-        if(day == ''){
-            flag = false;
-            showError("day", "出版年月日を入力してください。");
-        }else if (!checkDay(day, month, year)){
-            flag = false;
-            showError("day", "出版年月日は半角数字で入力してください。");
-        }
-        
+            if(day == ''){
+                flag = false;
+                showError("day", "出版年月日を入力してください。"); // MSG 09
+            }else if (!checkDay(day, month, year)){
+                flag = false;
+                showError("day", "出版年月日は半角数字で入力してください。"); // MSG 10
+            }     
         return flag;
 
     }
 
-    function validateFind(){
+    function handleFind(){
+        const formAdd = document.getElementById('crud_form');
+        formAdd.action = "http://foisweb.com/posts/find";
         var flag = true;
         var bookid= getValueById("form_txtbookid");
         if(bookid == ""){
-            alert("本IDを入力してください。");
+            alert("本IDを入力してください。"); // MSG 01
             flag = false;
         }
         else if(bookid.length != 4 ){
-            alert("本IDは半角英数字で入力してください。");
+            alert("本IDは半角英数字で入力してください。"); // MSG 02
             flag = false;
         }
         return flag;
     }
 
-    function validateDelete(){
-
+    function handleDelete(){
+        // change action
+            const formAdd = document.getElementById('crud_form');
+            formAdd.action = "http://foisweb.com/posts/delete";
+        // validate
         var flag = true;
         var bookid= getValueById("form_txtbookid");
         if(bookid == ""){
-            alert("本IDを入力してください。");
+            alert("本IDを入力してください。"); // MSG 01
             flag = false;
         }
         else if(bookid.length != 4 ){
-            alert("本IDは半角英数字で入力してください。");
+            alert("本IDは半角英数字で入力してください。"); // MSG 02
             flag = false;
         }
         return flag;

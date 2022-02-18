@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
             <!--form CURD book-->
-            <?= Form::open(array('action'=>'posts/CRUD', 'method'=>'post'));?>
+            <?= Form::open(array( 'method'=>'post', 'id' => 'crud_form'));?>
             <div class="row g-3">
                 <div
                     style="
@@ -34,7 +34,7 @@
                             class="col-md-6"
                             style="display: flex; align-items: flex-end"
                         >
-                            <?= Form::button('find', '検索', array("onclick"=>"return validateFind()", "value" => "btnfind",'id' => 'btnfind','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                            <?= Form::button('find', '検索', array("onclick"=>"return handleFind()", "value" => "btnfind",'id' => 'btnfind','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                         </div> 
                 </div>
                 <span style="color: red;" id="err_bookid"></span>
@@ -203,8 +203,6 @@
                         <!--attribute of book-->    
                 <?php }?>
 
-               
-
             <!--form CURD book-->
                 <div class="col-12" style="display: flex">
                     <div class="col-4"></div>
@@ -212,11 +210,11 @@
                         class="col-8"
                         style="display: flex; justify-content: flex-end"
                     >
-                        <?= Form::button('add', '追加(Add)', array("onclick"=>"return validateAdd()", "value" => "btnadd';" ,'id' => 'btnadd','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                        <?= Form::button('add', '追加(Add)', array("onclick"=>"return handleAdd()", "value" => "btnadd';" ,'id' => 'btnadd','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                       
-                        <?= Form::button('update', '更新(Update)', array("onclick"=>"return validateUpdate()", "value" => "btnupdate';" ,'id' => 'btnupdate','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                        <?= Form::button('update', '更新(Update)', array("onclick"=>"return handleUpdate()", "value" => "btnupdate';" ,'id' => 'btnupdate','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                        
-                        <?= Form::button('delete', '検索(Delete)', array("onclick"=>"return validateDelete()", "value" => "btndelete';" ,'id' => 'btndelete','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
+                        <?= Form::button('delete', '検索(Delete)', array("onclick"=>"return handleDelete()", "value" => "btndelete';" ,'id' => 'btndelete','type' => 'submit', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                      
                         <?= Form::button('clear', 'クリア(Clear)', array("onclick"=>"return handleclear()", "value" => "btnclear';" ,'id' => 'btnclear', 'class' => 'btn btn-secondary',  'style'=> 'margin-left:15px'));?>
                     </div>
