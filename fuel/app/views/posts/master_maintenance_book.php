@@ -132,7 +132,7 @@
                                 id="booktitle"
                                 name="txtbooktitle"
                                 placeholder=""
-                                value=  '<?php echo $mtbook-> book_title?>' 
+                                value=  '<?php echo $mtbook->book_title?>' 
                                 >
                             </input>
                             <span style="color: red;" id="err_booktitle"></span>

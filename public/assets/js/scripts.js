@@ -104,7 +104,7 @@
     function handleAdd(){
         //change action
             const formAdd = document.getElementById('crud_form');
-            formAdd.action = "http://foisweb.com/posts/create";
+            formAdd.action = "/posts/create";
 
         // validate
             var flag = true;
@@ -195,7 +195,7 @@
     function handleUpdate(){
         // change action
             const formAdd = document.getElementById('crud_form');
-            formAdd.action = "http://foisweb.com/posts/update";
+            formAdd.action = "/posts/update";
         // validate
             var flag = true;
             // book id
@@ -278,7 +278,7 @@
 
     function handleFind(){
         const formAdd = document.getElementById('crud_form');
-        formAdd.action = "http://foisweb.com/posts/find";
+        formAdd.action = "/posts/find";
         var flag = true;
         var bookid= getValueById("form_txtbookid");
         if(bookid == ""){
@@ -295,7 +295,7 @@
     function handleDelete(){
         // change action
             const formAdd = document.getElementById('crud_form');
-            formAdd.action = "http://foisweb.com/posts/delete";
+            formAdd.action = "/posts/delete";
         // validate
         var flag = true;
         var bookid= getValueById("form_txtbookid");

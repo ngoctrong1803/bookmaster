@@ -24,32 +24,33 @@
         }
         public function action_find(){
              try {
-                $errormessage = null;
-                $successmessage = null;
-   
                 $bookid = Input::post('txtbookid');
-   
-                $mtbook = Model_MtBook::find($bookid);
                 // check bookid
                 if($bookid == ""){
                     $errormessage = "本IDを入力してください。"; // MSG 01
+                    $this->template->title = "本マスタメンテ";
+                    $data = array('error_mess' => $errormessage);
+                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
                 }
-                else if(strlen($bookid) != 4){
+                if(strlen($bookid) != 4){
                     $errormessage = "本IDは半角英数字で入力してください。";// MSG 02
+                    $this->template->title = "本マスタメンテ";
+                    $data = array('error_mess' => $errormessage);
+                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
                 }
                 // handle find book 
-                else if($mtbook != null){
+                if(Model_MtBook::findBook($bookid)->id != null){
+                    $mtbook = Model_MtBook::findBook($bookid);
                     $successmessage = "本が見つかりました。"; //MSG 03
-                    $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $data = array('mtbook'=> $mtbook, 'success_mess' =>$successmessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
                 }
                 else{
                     $errormessage = "本ID".$bookid."が見つかりません。"; //MSG 04
-                    $data = array('error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $data = array('error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
-    
                 }
              }
              catch (Exception $e) {
@@ -59,9 +60,7 @@
              
         }
         public function action_create(){
-            try{
-                $errormessage = null;
-                $successmessage = null;
+             try{
                 // book_id
                 $bookid = Input::post('txtbookid');
                 // book_title
@@ -75,62 +74,46 @@
                 $month = Input::post('txtmonth');
                 $day = Input::post('txtday');
        
-               // new book object to add.
-               $mtbook = new Model_MtBook();
-               // creat a book
-               $mtbook->id = $bookid;
-               $mtbook->book_title = $booktitle;
-               $mtbook->author_name =  $authorname;
-               $mtbook->publisher = $publisher;
-   
+                $mtbook = array('id' => $bookid, 'book_title' => $booktitle, 'author_name' => $authorname, 'publisher' => $publisher);
+    
                // publication_day
                if($year == null ||  $month == null || $day == null){
                    $errormessage = "出版年月日が不正です。"; // MSG 16
-                   $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                   $data = array('mtbook'=> (object) $mtbook ,'error_mess' => $errormessage);
                    $this->template->title = "本マスタメンテ";
                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
                }
-   
-               $checkDay= checkdate($month, $day, $year);
-               if ($checkDay == false){
+               else if (checkdate($month, $day, $year) == false){
                    $errormessage = "出版年月日が不正です。"; // MSG 16
-                   $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                   $data = array('mtbook'=> (object) $mtbook ,'error_mess' => $errormessage);
                    $this->template->title = "本マスタメンテ";
                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
                }
    
                // set publication day
                $publicationDay = ''.$year.'-'.$month.'-'.$day.'';
-               $date = date($publicationDay);
-   
-               //public day
-               $mtbook->publication_day = $date;
-   
+               $publicationDay = date($publicationDay);
                // insert_day
                $today = date("Y-m-d H:i:s");
-               $mtbook->insert_day = $today;
-   
                // update_day
-               $mtbook->update_day = null;
+               $update_day = null;
+               // add property to array
+               $mtbook = array_merge( $mtbook, array('publication_day' => $publicationDay, 'insert_day' => $today, 'update_day' => $update_day));
+
                
                // check exist of book
-               $bookidcheck = $bookid;
-               $mtbookcheck = Model_MtBook::find($bookidcheck);
+               $mtbookcheck = Model_MtBook::find($bookid);
    
-               if($mtbookcheck != null){    
-                   $errormessage = "本ID".$mtbook->id."は登録されています。別のIDを入力してください。";// MSG 11
-   
-                   $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                if($mtbookcheck != null){    
+                   $errormessage = "本ID".$bookid."は登録されています。別のIDを入力してください。";// MSG 11
+                   $data = array('mtbook'=> ((object) $mtbook) ,'error_mess' => $errormessage);
                    $this->template->title = "本マスタメンテ";
                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
-   
                }
-               else{// book doesn't exist
-                   if($mtbookcheck == null){     
-                       $mtbook->save();
-                       $successmessage ="本を登録しました。"; //MSG 12
-                   }
-                   $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+               else{
+                   $book = Model_MtBook::insertBook($mtbook);
+                   $successmessage ="本を登録しました。"; //MSG 12
+                   $data = array('mtbook'=> $book , 'success_mess' =>$successmessage);
                    $this->template->title = "本マスタメンテ";
                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
                }
@@ -143,8 +126,6 @@
 
         public function action_update(){
            try{
-                $errormessage = null;
-                $successmessage = null;
                 // book_id
                 $bookid = Input::post('txtbookid');
                 // book_title
@@ -158,55 +139,51 @@
                 $month = Input::post('txtmonth');
                 $day = Input::post('txtday');
 
-                $mtbook = new Model_MtBook();
-                // creat a book
-                $mtbook->id = $bookid;
-                $mtbook->book_title = $booktitle;
-                $mtbook->author_name =  $authorname;
-                $mtbook->publisher = $publisher;
+                $mtbook = array('id' => $bookid, 'book_title' => $booktitle, 'author_name' => $authorname, 'publisher' => $publisher);
 
                  // publication_day
                  if($year == null ||  $month == null || $day == null){
                     $errormessage = "出版年月日が不正です。"; // MSG 16
-                    $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $data = array('mtbook'=> ((object)$mtbook) ,'error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
                 }
             
-                $checkDay= checkdate($month, $day, $year);
-                if ($checkDay == false){
+                
+                if ( checkdate($month, $day, $year) == false){
                     $errormessage = "出版年月日が不正です。"; // MSG 16
-                    $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $data = array('mtbook'=> ((object)$mtbook) ,'error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
                 }
 
 
                 // search book_id
-                $mtbookUpdate = Model_MtBook::find($bookid);   
-                if($mtbookUpdate != null){     
-
-                    $mtbookUpdate->book_title = $booktitle;
-                    $mtbookUpdate->author_name =  $authorname;
-                    $mtbookUpdate->publisher = $publisher;
-
+                if( Model_MtBook::find($bookid) != null){              
+                    //publication_day
                     $publicationDay = ''.$year.'-'.$month.'-'.$day.'';
-                    $date = date($publicationDay);
-                    $mtbookUpdate->publication_day = $date;
+                    $publicationDay = date($publicationDay);
             
                     // update_day
-                    $today = date("Y-m-d H:i:s");
-                    $mtbookUpdate->update_day = $today;
-                    $mtbookUpdate->save();
+                    $update_day = date("Y-m-d H:i:s");
+                                        
+                    // insert day
+                    $insertDay = Model_MtBook::find($bookid)->insert_day;
+
+                    $mtbook = array_merge( $mtbook, array('publication_day' => $publicationDay, 
+                                                            'update_day' => $update_day, 
+                                                            'insert_day' => $insertDay));
+                    $book = Model_MtBook::updateBook($mtbook);
+                    
                     $successmessage ="本を更新しました。"; // MSG 13
-                    $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $data = array('mtbook'=> $book , 'success_mess' =>$successmessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
 
                 }
-                else if($mtbookUpdate == null){
+                else{
                     $errormessage = "本ID".$bookid."が見つかりません。"; // MSG 14
-                    $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $data = array('mtbook'=> $mtbook ,'error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);                    
                 }
@@ -219,23 +196,19 @@
 
         public function action_delete(){
             try{
-                $errormessage = null;
-                $successmessage = null;
-
+              
                 $bookid = Input::post('txtbookid');
 
-                $mtbook = Model_MtBook::find($bookid);
-                if($mtbook != null){   
-                    $mtbook->delete();
-                    $successmessage = "本ID".$mtbook->id."を削除しました。"; // MSG 15
-                    $data = array('error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                if(Model_MtBook::find($bookid) != null){   
+                    Model_MtBook::deleteBook($bookid);
+                    $successmessage = "本ID".$bookid."を削除しました。"; // MSG 15
+                    $data = array('success_mess' =>$successmessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);     
-
                 }
                 else{
-                    $errormessage = "本ID".Input::post('txtbookid')."が見つかりません。"; // MSG 14
-                    $data = array('error_mess' => $errormessage, 'success_mess' =>$successmessage);
+                    $errormessage = "本ID".$bookid."が見つかりません。"; // MSG 14
+                    $data = array('error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);   
                 }
