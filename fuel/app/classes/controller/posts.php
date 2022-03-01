@@ -45,9 +45,9 @@
                     $errormessage = "本ID".$bookid."が見つかりません。"; //MSG 04
                     $data = array('error_mess' => $errormessage);
                 }
+              
                 $this->template->title = "本マスタメンテ";
                 $this->template->content = View::forge('posts/master_maintenance_book', $data);
-                
              }
              catch (Exception $e) {
                 Session::set_flash('errormessage',  "サーバー処理で例外が発生しました。"); // MSG 05
@@ -76,15 +76,17 @@
                // publication_day
                if($year == null ||  $month == null || $day == null){
                    $errormessage = "出版年月日が不正です。"; // MSG 16
-                   $data = array('mtbook'=> (object) $mtbook ,'error_mess' => $errormessage);   
+                   $data = array('mtbook'=> (object) $mtbook ,'error_mess' => $errormessage);  
                    $this->template->title = "本マスタメンテ";
-                   $this->template->content = View::forge('posts/master_maintenance_book', $data);
+                   $this->template->content = View::forge('posts/master_maintenance_book', $data);   
+                   return;       
                }
                else if (checkdate($month, $day, $year) == false){
                    $errormessage = "出版年月日が不正です。"; // MSG 16
                    $data = array('mtbook'=> (object) $mtbook ,'error_mess' => $errormessage);  
                    $this->template->title = "本マスタメンテ";
                    $this->template->content = View::forge('posts/master_maintenance_book', $data);
+                   return;
                }
    
                // set publication day
@@ -143,12 +145,14 @@
                     $data = array('mtbook'=> ((object)$mtbook) ,'error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
+                    return;
                 }
                 else if ( checkdate($month, $day, $year) == false){
                     $errormessage = "出版年月日が不正です。"; // MSG 16
                     $data = array('mtbook'=> ((object)$mtbook) ,'error_mess' => $errormessage);
                     $this->template->title = "本マスタメンテ";
                     $this->template->content = View::forge('posts/master_maintenance_book', $data);
+                    return;
                 }
 
 

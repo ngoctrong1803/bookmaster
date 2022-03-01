@@ -165,40 +165,76 @@
                             />
                             <span style="color: red;" id="err_publisher"></span>
                         </div>
-                        <label for="insert_day" class="form-label">出版年月日：(Publication day)</label>
-                        <?php $publicaionDay=  strtotime($mtbook->publication_day)?>
-                        <div class="public_day" style="display:flex;">
-                            <div class="year">
-                                    <div
-                                        class="col-md-11"
-                                        style="display: flex; align-items: center"
-                                    >
-                                        <input type="text" class="form-control" id="year" name="txtyear" value=  '<?php echo date("Y",$publicaionDay)?>' />
-                                        <label style="display: block; margin-left: 7px"> 年</label>
+                        <?php if(isset($mtbook->publication_day)== true){?>
+                            <label for="insert_day" class="form-label">出版年月日：(Publication day)</label>
+                            <?php $publicaionDay=  strtotime($mtbook->publication_day)?>
+                                <div class="public_day" style="display:flex;">
+                                    <div class="year">
+                                            <div
+                                                class="col-md-11"
+                                                style="display: flex; align-items: center"
+                                            >
+                                                <input type="text" class="form-control" id="year" name="txtyear" value=  '<?php echo date("Y",$publicaionDay)?>' />
+                                                <label style="display: block; margin-left: 7px"> 年</label>
+                                            </div>
+                                            <span style="color: red;" id="err_year"></span>
+                                        </div>
+                                    <div class="month">
+                                            <div
+                                                class="col-md-11"
+                                                style="display: flex; align-items: center"
+                                            >
+                                                <input type="text" class="form-control" id="month" name="txtmonth" value=  '<?php echo date("m",$publicaionDay)?>'/>
+                                                <label style="display: block; margin-left: 7px"> 月</label>
+                                            </div>
+                                            <span style="color: red;" id="err_month"></span>
+                                        </div>
+                                    <div class="day">
+                                            <div
+                                                class="col-md-11"
+                                                style="display: flex; align-items: center"
+                                            >
+                                                <input type="text" class="form-control" id="day" name="txtday"  value=  '<?php echo date("d",$publicaionDay)?>' />
+                                                <label style="display: block; margin-left: 7px"> 日</label>
+                                            </div>
+                                            <span style="color: red;" id="err_day"></span>
                                     </div>
-                                    <span style="color: red;" id="err_year"></span>
-                                </div>
-                            <div class="month">
-                                    <div
-                                        class="col-md-11"
-                                        style="display: flex; align-items: center"
-                                    >
-                                        <input type="text" class="form-control" id="month" name="txtmonth" value=  '<?php echo date("m",$publicaionDay)?>'/>
-                                        <label style="display: block; margin-left: 7px"> 月</label>
+                                </div>    
+                        <?php }else {?>
+                            <label for="insert_day" class="form-label">出版年月日：(Publication day)</label>
+                                <div class="public_day" style="display:flex;">
+                                    <div class="year">
+                                            <div
+                                                class="col-md-11"
+                                                style="display: flex; align-items: center"
+                                            >
+                                                <input type="text" class="form-control" id="year" name="txtyear" value=  '' />
+                                                <label style="display: block; margin-left: 7px"> 年</label>
+                                            </div>
+                                            <span style="color: red;" id="err_year"></span>
+                                        </div>
+                                    <div class="month">
+                                            <div
+                                                class="col-md-11"
+                                                style="display: flex; align-items: center"
+                                            >
+                                                <input type="text" class="form-control" id="month" name="txtmonth" value=  ''/>
+                                                <label style="display: block; margin-left: 7px"> 月</label>
+                                            </div>
+                                            <span style="color: red;" id="err_month"></span>
+                                        </div>
+                                    <div class="day">
+                                            <div
+                                                class="col-md-11"
+                                                style="display: flex; align-items: center"
+                                            >
+                                                <input type="text" class="form-control" id="day" name="txtday"  value=  '' />
+                                                <label style="display: block; margin-left: 7px"> 日</label>
+                                            </div>
+                                            <span style="color: red;" id="err_day"></span>
                                     </div>
-                                    <span style="color: red;" id="err_month"></span>
-                                </div>
-                            <div class="day">
-                                    <div
-                                        class="col-md-11"
-                                        style="display: flex; align-items: center"
-                                    >
-                                        <input type="text" class="form-control" id="day" name="txtday"  value=  '<?php echo date("d",$publicaionDay)?>' />
-                                        <label style="display: block; margin-left: 7px"> 日</label>
-                                    </div>
-                                    <span style="color: red;" id="err_day"></span>
-                            </div>
-                        </div>
+                                </div>    
+                        <?php }?>
                         <!-------------------------------------------------------------->
                         <!--attribute of book-->    
                 <?php }?>

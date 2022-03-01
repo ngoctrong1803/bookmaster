@@ -109,7 +109,7 @@
         // validate
             var flag = true;
             // book id
-            //var bookid= document.getElementById("form_txtbookid").value;
+            var bookid= document.getElementById("form_txtbookid").value;
 
             var bookid= getValueById("form_txtbookid");
             // book title
@@ -273,7 +273,6 @@
                 showError("day", "出版年月日は半角数字で入力してください。"); // MSG 10
             }     
         return flag;
-
     }
 
     function handleFind(){
