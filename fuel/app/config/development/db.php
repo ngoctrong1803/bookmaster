@@ -27,22 +27,5 @@ return array(
 			'password' => '',
 		),
 	),
-	// 'development' => array(
-	// 	'type'           => 'mysqli',
-	// 	'connection'     => array(
-	// 		'hostname'       => 'localhost',
-	// 		'port'           => '3307',
-	// 		'database'       => 'foisweb',
-	// 		'username'       => 'root',
-	// 		'password'       => '',
-	// 		'persistent'     => false,
-	// 		'compress'       => false,
-	// 	),
-	// 	'identifier'     => '`',
-	// 	'table_prefix'   => '',
-	// 	'charset'        => 'utf8',
-	// 	'enable_cache'   => true,
-	// 	'profiling'      => false,
-	// 	'readonly'       => false,
-	// ),
+
 );

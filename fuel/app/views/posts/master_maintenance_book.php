@@ -245,7 +245,7 @@
                 <?php if(isset($success_mess)){?>
                     <div class="toast" id="toastNotification" style="font-size: 16px; position: absolute; top:0px; right:15px;">
                        <div class="toast-header" style="background-color: #23c552; color:#e8eaee">
-                           <Strong class="mr-auto">Thông báo!</Strong>
+                           <Strong class="mr-auto">メッセージ!</Strong>
                            <i class="bi bi-bell-fill"></i>
                        </div>
                        <div class="toast-body">
