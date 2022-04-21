@@ -3,12 +3,14 @@
 class Model_MtBook extends Orm\Model{
     protected static $_properties = array(
         'id',
-        'book_title', 
+        'book_title',
+        'book_img', 
         'author_name',
         'publisher',
         'publication_day',
         'insert_day',
-        'update_day'
+        'update_day',
+
     );
     // find book
     public static function findBook($bookid) { 
@@ -20,6 +22,7 @@ class Model_MtBook extends Orm\Model{
         foreach ($result as $row) { 
             $book->id = $row['id'];
             $book->book_title = $row['book_title'];
+            $book->book_img = $row['book_img'];
             $book->author_name = $row['author_name'];
             $book->publisher = $row['publisher'];
             $book->publication_day = $row['publication_day'];
@@ -30,7 +33,7 @@ class Model_MtBook extends Orm\Model{
     }
     // insert book
     public static function insertBook($mtbook) { 
-        $mtbookUpdate = array( 'id' => $mtbook['id'], 'book_title' => $mtbook['book_title'], 'author_name' => $mtbook['author_name'],
+        $mtbookUpdate = array( 'id' => $mtbook['id'], 'book_title' => $mtbook['book_title'],'book_img' => $mtbook['book_img'], 'author_name' => $mtbook['author_name'],
                                'publisher' => $mtbook['publisher'], 'publication_day' => $mtbook['publication_day'],
                                'insert_day' => $mtbook['insert_day'], 'update_day' => $mtbook['update_day']);
         DB::insert('mt_books')->set($mtbookUpdate)->execute();
@@ -41,14 +44,13 @@ class Model_MtBook extends Orm\Model{
     // update book
     public static function updateBook($mtbook) {   
 
-        $mtbookUpdate = array('book_title' =>  $mtbook['book_title'], 'author_name' => $mtbook['author_name'],
+        $mtbookUpdate = array('book_title' =>  $mtbook['book_title'], 'book_img' => $mtbook['book_img'], 'author_name' => $mtbook['author_name'],
                               'publisher' => $mtbook['publisher'], 'publication_day' => $mtbook['publication_day'],
                               'update_day' => $mtbook['update_day']);
-        DB::update('mt_books') ->set($mtbookUpdate) ->where('id', '=', $mtbook['id'])->execute();
+        DB::update('mt_books')->set($mtbookUpdate)->where('id', '=', $mtbook['id'])->execute();
     
         $book = Model_MtBook::find($mtbook['id']);
         return $book; 
-
     }
     //delete book
     public static function deleteBook($bookid) { 

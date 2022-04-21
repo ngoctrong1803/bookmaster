@@ -18,7 +18,7 @@ return array(
 	 *
 	 */
 	/*'_root_' => 'controller_name/action_name',*/
-	'_root_' => 'posts/index',
+	'_root_' => 'masterbook/index',
 
 	/**
 	 * -------------------------------------------------------------------------
@@ -38,7 +38,6 @@ return array(
 	 *
 	 */
 	
-	'about(/:name)?' => array('posts/about', 'name' => 'about'),
-	'home(/:name)?' => array('posts/home', 'name' => 'home'),
+	'home(/:name)?' => array('masterbook/home', 'name' => 'home'),
 
 );
