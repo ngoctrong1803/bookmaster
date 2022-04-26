@@ -206,13 +206,10 @@ function handleAdd() {
     flag = false;
     showError("day", "出版年月日は半角数字で入力してください。"); //MSG 10
   }
-
   if (flag == true) {
     //========================================= handle with ajax ==========================================
     let formData = new FormData();
-    formData.append("action", "add");
     var files = $("#form_book_img")[0].files;
-
     var checkFile = "true";
     if (files.length == 0) {
       checkFile = "false";
@@ -237,7 +234,7 @@ function handleAdd() {
     formData.append("day", day);
     console.log("form data:", formData);
     $.ajax({
-      url: "/masterbook/index",
+      url: "/masterbook/create",
       type: "POST",
       data: formData,
       contentType: false,
@@ -245,7 +242,6 @@ function handleAdd() {
 
       success: function (response) {
         let decode = JSON.parse(response);
-        console.log("ajax:", decode);
         if (decode.error_mess) {
           showToast(decode.error_mess, "error");
         } else {
@@ -352,7 +348,6 @@ function handleUpdate() {
   if (flag) {
     //========================================= handle with ajax ==========================================
     let formData = new FormData();
-    formData.append("action", "update");
     var files = $("#form_book_img")[0].files;
 
     var checkFile = "true";
@@ -379,7 +374,7 @@ function handleUpdate() {
     formData.append("day", day);
     console.log("form data:", formData);
     $.ajax({
-      url: "/masterbook/index",
+      url: "/masterbook/update",
       type: "POST",
       data: formData,
       contentType: false,
@@ -425,12 +420,10 @@ function handleFind() {
     return false;
   }
   let formData = new FormData();
-  formData.append("action", "find");
-
   var bookId = $("#form_txtbookid").val();
   formData.append("bookId", bookId);
   $.ajax({
-    url: "/masterbook/index",
+    url: "/masterbook/find",
     type: "POST",
     data: formData,
     contentType: false,
@@ -477,12 +470,10 @@ function handleDelete() {
   }
 
   let formData = new FormData();
-  formData.append("action", "delete");
-
   var bookId = $("#form_txtbookid").val();
   formData.append("bookId", bookId);
   $.ajax({
-    url: "/masterbook/index",
+    url: "/masterbook/delete",
     type: "POST",
     data: formData,
     contentType: false,
