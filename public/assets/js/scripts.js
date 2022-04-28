@@ -22,6 +22,7 @@ $(document).ready(function () {
       // day
       $("#day").val("");
       $("#bookimage").attr("src", "");
+      $("#form_book_img").val("");
     }
   });
 });
@@ -251,7 +252,7 @@ function handleAdd() {
           $("#booktitle").val(mtbook?.book_title);
           $("#authorname").val(mtbook?.author_name);
           $("#publisher").val(mtbook?.publisher);
-          $("#bookimage").attr("src", "data:image;base64," + mtbook?.book_img);
+          $("#bookimage").attr("src", "/assets/img/" + mtbook?.book_img);
           let publication_day = new Date(mtbook?.publication_day);
           let year = publication_day.getFullYear();
           let month = publication_day.getMonth() + 1;
@@ -392,7 +393,8 @@ function handleUpdate() {
           $("#booktitle").val(mtbook?.book_title);
           $("#authorname").val(mtbook?.author_name);
           $("#publisher").val(mtbook?.publisher);
-          $("#bookimage").attr("src", "data:image;base64," + mtbook?.book_img);
+          $("#bookimage").attr("src", "/assets/img/" + mtbook?.book_img);
+          console.log("url:", mtbook?.book_img);
           let publication_day = new Date(mtbook?.publication_day);
           let year = publication_day.getFullYear();
           let month = publication_day.getMonth() + 1;
@@ -439,7 +441,7 @@ function handleFind() {
         $("#booktitle").val(mtbook?.book_title);
         $("#authorname").val(mtbook?.author_name);
         $("#publisher").val(mtbook?.publisher);
-        $("#bookimage").attr("src", "data:image;base64," + mtbook?.book_img);
+        $("#bookimage").attr("src", "/assets/img/" + mtbook?.book_img);
         let publication_day = new Date(mtbook?.publication_day);
         let year = publication_day.getFullYear();
         let month = publication_day.getMonth() + 1;
@@ -492,6 +494,7 @@ function handleDelete() {
         $("#year").val("");
         $("#month").val("");
         $("#day").val("day");
+        $("#form_book_img").val("");
         showToast(decode.success_mess, "success");
       }
     },

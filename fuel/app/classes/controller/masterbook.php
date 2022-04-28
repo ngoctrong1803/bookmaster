@@ -4,10 +4,10 @@
         public function action_index() { 
             return View::forge("masterbook/index"); 
         } 
-        public function action_find(){
+        public function action_find(){          
             if(Input::is_ajax()) { 
                     try {
-                        $bookId = $_POST["bookId"];
+                        $bookId = Input::post("bookId");
                         $data;
                         // check bookId
                         if($bookId == ""){
@@ -20,7 +20,6 @@
                         }
                         else if(Model_MtBook::findBook($bookId)->id != null){
                             $mtbook =  Model_MtBook::findBook($bookId);
-
                             $mtbook = array( 'id' => $mtbook->id,
                                             'book_title' => $mtbook->book_title,
                                             'book_img' => $mtbook->book_img, 
@@ -41,26 +40,36 @@
                         return;
                     }
                     catch (Exception $e) {
-                        Session::set_flash('errormessage',  "サーバー処理で例外が発生しました。"); // MSG 05
-                        Response::redirect('/');
+                        $errormessage = "サーバー処理で例外が発生しました。";// MSG 11
+                        $data = array('error_mess' => $errormessage);
+                        echo json_encode($data);
                     }     
-            }   
+            }  
+      
         }
         public function action_create(){
             if(Input::is_ajax()) { 
                     try{
                         $data;
-                        $bookid = $_POST["bookId"];
-                        $booktitle = $_POST["booktitle"];
-                        $authorname = $_POST["authorname"];
-                        $publisher = $_POST["publisher"];
-                        $year = $_POST["year"];
-                        $month = $_POST["month"];
-                        $day = $_POST["day"];
-                        $checkFile = $_POST["checkFile"];
+                        $bookid = Input::post("bookId");
+                        $booktitle = Input::post("booktitle");
+                        $authorname = Input::post("authorname");
+                        $publisher = Input::post("publisher");
+                        $year = Input::post("year");
+                        $month = Input::post("month");
+                        $day = Input::post("day");
+                        $checkFile = Input::post("checkFile");
                         $imageUpload= "";
                     
                 
+                        $mtbookcheck = Model_MtBook::find($bookid);
+                        if($mtbookcheck != null){    
+                            $errormessage = "本ID".$bookid."は登録されています。別のIDを入力してください。";// MSG 11
+                            $data = array('error_mess' => $errormessage);
+                            echo json_encode($data);
+                            return;
+                        }
+
                         $mtbook = array('id' => $bookid, 'book_title' => $booktitle, 'author_name' => $authorname, 'publisher' => $publisher);
                             // check null
                             if($bookid == null ||  $booktitle == null || $authorname == null || $publisher == null){
@@ -95,7 +104,7 @@
 
                             if($checkFile == "true"){
                                 $config = array( 
-                                    'path' => DOCROOT.'files', 
+                                    'path' => DOCROOT.'/assets/img', 
                                     'randomize' => true, 
                                     'auto_rename' => false,
                                     'ext_whitelist' => array( 'jpg', 'gif', 'png'), 
@@ -103,10 +112,9 @@
                                 Upload::process($config);  
                                 // if there are any valid files 
                                 if (Upload::is_valid()) { 
-                                    $fileUpload = Upload::get_files(0)['file'];
-                                    $imageUpload = file_get_contents($fileUpload);
-                                    $imageUpload = base64_encode($imageUpload);
-                                    $mtbook = array_merge( $mtbook, array('book_img' => $imageUpload));
+                                    Upload::save(); 
+                                    $fileUpload = Upload::get_files(0)['saved_as'];
+                                    $mtbook = array_merge( $mtbook, array('book_img' => $fileUpload));
                                 }   
                                 else {
                                     $errormessage = "Can you upload image with extension are .png, .jpg, .gif。"; // MSG 16
@@ -120,35 +128,27 @@
                                 echo json_encode($data);
                                 return;
                             }
-
-                            // get image file
-                        
-                            // check exist of book
-                            $mtbookcheck = Model_MtBook::find($bookid);
-                            if($mtbookcheck != null){    
-                                $errormessage = "本ID".$bookid."は登録されています。別のIDを入力してください。";// MSG 11
-                                $data = array('error_mess' => $errormessage);
-                            }
-                            else{
-                                $book = Model_MtBook::insertBook($mtbook);
-                                $book = array( 'id' => $book->id,
-                                'book_title' => $book->book_title,
-                                'book_img' => $book->book_img, 
-                                'author_name' =>$book->author_name,
-                                'publisher' =>$book->publisher,
-                                'publication_day' =>$book->publication_day,
-                                );
-                                $successmessage ="本を登録しました。"; //MSG 12
-                                $data = array('mtbook'=> $book , 'success_mess' =>$successmessage);
-                            
-                            }
+ 
+                            $book = Model_MtBook::insertBook($mtbook);
+                            $book = array( 'id' => $book->id,
+                            'book_title' => $book->book_title,
+                            'book_img' => $book->book_img, 
+                            'author_name' =>$book->author_name,
+                            'publisher' =>$book->publisher,
+                            'publication_day' =>$book->publication_day,
+                            );
+                            $successmessage ="本を登録しました。"; //MSG 12
+                            $data = array('mtbook'=> $book , 'success_mess' =>$successmessage);
+        
                             echo json_encode($data);
                             return;
                         //echo json_encode($mtbook); 
                     } 
                     catch (Exception $e) {
-                        Session::set_flash('errormessage',  "サーバー処理で例外が発生しました。"); // MSG 05
-                        Response::redirect('/');
+                        $errormessage = "サーバー処理で例外が発生しました。";// MSG 11
+                        $data = array('error_mess' => $errormessage);
+                        echo json_encode($data);
+                       
                     }     
             }
         }
@@ -156,66 +156,66 @@
             if(Input::is_ajax()) { 
                 try{ 
                     $data;
-                    $bookid = $_POST["bookId"];
-                    $booktitle = $_POST["booktitle"];
-                    $authorname = $_POST["authorname"];
-                    $publisher = $_POST["publisher"];
-                    $year = $_POST["year"];
-                    $month = $_POST["month"];
-                    $day = $_POST["day"];
-                    $checkFile = $_POST["checkFile"];
+                    $bookid = Input::post("bookId");
+                    $booktitle = Input::post("booktitle");
+                    $authorname = Input::post("authorname");
+                    $publisher = Input::post("publisher");
+                    $year = Input::post("year");
+                    $month = Input::post("month");
+                    $day = Input::post("day");
+                    $checkFile = Input::post("checkFile");
                     $imageUpload= "";
                     $mtbook = array('id' => $bookid, 'book_title' => $booktitle, 'author_name' => $authorname, 'publisher' => $publisher);
-                    // check null
-                    if($bookid == null ||  $booktitle == null || $authorname == null || $publisher == null){
-                    $errormessage = "The book information is incomplete."; // MSG 16
-                    $data = array('error_mess' => $errormessage);
-                    echo json_encode($data);
-                    return;     
-                    }
-                    // publication_day
-                    if($year == null ||  $month == null || $day == null){
-                        $errormessage = "出版年月日が不正です。"; // MSG 16
-                        $data = array('error_mess' => $errormessage);     
+                    if( Model_MtBook::find($bookid) != null){
+                        // check null
+                        if($bookid == null ||  $booktitle == null || $authorname == null || $publisher == null){
+                        $errormessage = "The book information is incomplete."; // MSG 16
+                        $data = array('error_mess' => $errormessage);
                         echo json_encode($data);
-                        return;
-                    }
-                    else if (checkdate($month, $day, $year) == false){
-                        $errormessage = "出版年月日が不正です。"; // MSG 16
-                        $data = array('error_mess' => $errormessage);  
-                        echo json_encode($data);
-                        return;
-                    }
-
-                    if($checkFile == "true"){
-                        $config = array( 
-                            'path' => DOCROOT.'files', 
-                            'randomize' => true, 
-                            'auto_rename' => false,
-                            'ext_whitelist' => array( 'jpg', 'gif', 'png'), 
-                        );  
-                        Upload::process($config);  
-                        // if there are any valid files 
-                        if (Upload::is_valid()) { 
-                            $fileUpload = Upload::get_files(0)['file'];
-                            $imageUpload = file_get_contents($fileUpload);
-                            $imageUpload = base64_encode($imageUpload);
-                            $mtbook = array_merge( $mtbook, array('book_img' => $imageUpload));
-                        }   
-                        else {
-                            $errormessage = "Can you upload image with extension are .png, .jpg, .gif。"; // MSG 16
+                        return;     
+                        }
+                        // publication_day
+                        if($year == null ||  $month == null || $day == null){
+                            $errormessage = "出版年月日が不正です。"; // MSG 16
+                            $data = array('error_mess' => $errormessage);     
+                            echo json_encode($data);
+                            return;
+                        }
+                        else if (checkdate($month, $day, $year) == false){
+                            $errormessage = "出版年月日が不正です。"; // MSG 16
                             $data = array('error_mess' => $errormessage);  
                             echo json_encode($data);
                             return;
                         }
-                    } else {
-                        $errormessage = "No file have been upload"; // MSG 16
-                        $data = array('error_mess' => $errormessage);  
-                        echo json_encode($data);
-                        return;
-                    }
-                    // search book_id
-                    if( Model_MtBook::find($bookid) != null){              
+
+                        if($checkFile == "true"){
+                            $config = array( 
+                                'path' => DOCROOT.'/assets/img', 
+                                'randomize' => true, 
+                                'auto_rename' => false,
+                                'ext_whitelist' => array( 'jpg', 'gif', 'png'), 
+                            );  
+                            Upload::process($config);  
+                            // if there are any valid files 
+                            if (Upload::is_valid()) { 
+                                Upload::save(); 
+                                $fileUpload = Upload::get_files(0)['saved_as'];
+                                $mtbook = array_merge( $mtbook, array('book_img' => $fileUpload));
+                            }   
+                            else {
+                                $errormessage = "Can you upload image with extension are .png, .jpg, .gif。"; // MSG 16
+                                $data = array('error_mess' => $errormessage);  
+                                echo json_encode($data);
+                                return;
+                            }
+                        } else {
+                            $errormessage = "No file have been upload"; // MSG 16
+                            $data = array('error_mess' => $errormessage);  
+                            echo json_encode($data);
+                            return;
+                        }
+                        // search book_id
+                                    
                         //publication_day
                         $publicationDay = ''.$year.'-'.$month.'-'.$day.'';
                         $publicationDay = date($publicationDay);
@@ -224,6 +224,9 @@
                                             
                         $mtbook = array_merge( $mtbook, array('publication_day' => $publicationDay, 
                                                                 'update_day' => $update_day));
+
+                        $imgName = Model_MtBook::find($bookid)->book_img;
+                        File::delete(DOCROOT.'/assets/img/'.$imgName);
                         $book = Model_MtBook::updateBook($mtbook);
                         $mtbook = array( 
                         'id' => $mtbook["id"],
@@ -244,8 +247,9 @@
                     return;
                 } 
                 catch (Exception $e) {
-                    Session::set_flash('errormessage',  "サーバー処理で例外が発生しました。"); // MSG 05
-                    Response::redirect('/');
+                    $errormessage = "サーバー処理で例外が発生しました。";// MSG 11
+                    $data = array('error_mess' => $errormessage);
+                    echo json_encode($data);
                 }                 
             }
         }
@@ -253,8 +257,12 @@
             if(Input::is_ajax()) { 
                     try{
                         $data;
-                        $bookId = $_POST["bookId"]; 
+                        $bookId = Input::post("bookId"); 
                         if(Model_MtBook::find($bookId) != null){  
+
+                            $imgName = Model_MtBook::find($bookId)->book_img;
+                            File::delete(DOCROOT.'/assets/img/'.$imgName);
+
                             Model_MtBook::deleteBook($bookId);
                             $successmessage = "本ID".$bookId."を削除しました。"; // MSG 15
                             $data = array('success_mess' =>$successmessage);  
@@ -268,8 +276,9 @@
                         return;
                     }
                     catch (Exception $e){
-                        Session::set_flash('errormessage',  "サーバー処理で例外が発生しました。"); // MSG 05
-                        Response::redirect('/');
+                        $errormessage = "サーバー処理で例外が発生しました。";// MSG 11
+                        $data = array('error_mess' => $errormessage);
+                        echo json_encode($data);
                     } 
             } 
         }

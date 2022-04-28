@@ -215,7 +215,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <img id="bookimage" with="250px" height="250px" >
+                            <img  id="bookimage" with="250px" height="250px" >
                         </div>
                         <label for="public_day" class="form-label">出版年月日：</label>
                         <div class="public_day" style="display:flex;">
