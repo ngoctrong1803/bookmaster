@@ -39,22 +39,22 @@ function showToast(message, type) {
   };
 
   if (type == "error") {
-    var Notification = document.getElementById("toastNotificationError");
-    document.getElementById("toast-mess-error").textContent = message;
+    var Notification = $("#toastNotificationError");
+    $("#toast-mess-error").text(message);
   }
   if (type == "success") {
-    var Notification = document.getElementById("toastNotificationSuccess");
-    document.getElementById("toast-mess-success").textContent = message;
+    var Notification = $("#toastNotificationSuccess");
+    $("#toast-mess-success").text(message);
   }
 
   var bsNotification = new bootstrap.Toast(Notification, option);
   bsNotification.show();
 }
 
-// sidebar evetn
-window.addEventListener("DOMContentLoaded", (event) => {
+// sidebar event handle template
+$(window).on("DOMContentLoaded", (event) => {
   // Toggle the side navigation
-  const sidebarToggle = document.body.querySelector("#sidebarToggle");
+  const sidebarToggle = document.getElementById("sidebarToggle"); //$("#sidebarToggle");
   if (sidebarToggle) {
     sidebarToggle.addEventListener("click", (event) => {
       event.preventDefault();
@@ -69,11 +69,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 //---------------------------------handle mtbooks-----------------------------------------
 function showError(key, mess) {
-  return (document.getElementById("err_" + key).innerHTML = mess);
+  return $("#err_" + key).html(mess);
 }
 
 function getValueById(id) {
-  return document.getElementById(id).value.trim();
+  return $.trim($(`#${id}`).val());
 }
 
 function checkYear(year) {
@@ -131,8 +131,6 @@ function handleAdd() {
   // validate
   var flag = true;
   // book id
-  var bookid = document.getElementById("form_txtbookid").value;
-
   var bookid = getValueById("form_txtbookid");
   // book title
   var booktitle = getValueById("booktitle");
@@ -209,7 +207,7 @@ function handleAdd() {
   }
   if (flag == true) {
     //========================================= handle with ajax ==========================================
-    let formData = new FormData();
+    var formData = new FormData();
     var files = $("#form_book_img")[0].files;
     var checkFile = "true";
     if (files.length == 0) {
@@ -233,7 +231,6 @@ function handleAdd() {
     formData.append("year", year);
     formData.append("month", month);
     formData.append("day", day);
-    console.log("form data:", formData);
     $.ajax({
       url: "/masterbook/create",
       type: "POST",
@@ -242,28 +239,28 @@ function handleAdd() {
       processData: false,
 
       success: function (response) {
-        let decode = JSON.parse(response);
+        var decode = JSON.parse(response);
         if (decode.error_mess) {
           showToast(decode.error_mess, "error");
         } else {
           showToast(decode.success_mess, "success");
-          let mtbook = decode.mtbook;
+          var mtbook = decode.mtbook;
           $("#form_txtbookid").val(mtbook?.id);
           $("#booktitle").val(mtbook?.book_title);
           $("#authorname").val(mtbook?.author_name);
           $("#publisher").val(mtbook?.publisher);
           $("#bookimage").attr("src", "/assets/img/" + mtbook?.book_img);
-          let publication_day = new Date(mtbook?.publication_day);
-          let year = publication_day.getFullYear();
-          let month = publication_day.getMonth() + 1;
-          let day = publication_day.getDate();
+          var publication_day = new Date(mtbook?.publication_day);
+          var year = publication_day.getFullYear();
+          var month = publication_day.getMonth() + 1;
+          var day = publication_day.getDate();
           $("#year").val(year);
           $("#month").val(month);
           $("#day").val(day);
         }
       },
       error: function (xhr, textStatus, errorThrown) {
-        alert("Ajax request failed.");
+        showToast("Ajax request failed.", "error");
       },
     });
   }
@@ -348,7 +345,7 @@ function handleUpdate() {
   }
   if (flag) {
     //========================================= handle with ajax ==========================================
-    let formData = new FormData();
+    var formData = new FormData();
     var files = $("#form_book_img")[0].files;
 
     var checkFile = "true";
@@ -373,7 +370,6 @@ function handleUpdate() {
     formData.append("year", year);
     formData.append("month", month);
     formData.append("day", day);
-    console.log("form data:", formData);
     $.ajax({
       url: "/masterbook/update",
       type: "POST",
@@ -382,30 +378,28 @@ function handleUpdate() {
       processData: false,
 
       success: function (response) {
-        let decode = JSON.parse(response);
-        console.log("ajax update:", decode);
+        var decode = JSON.parse(response);
         if (decode.error_mess) {
           showToast(decode.error_mess, "error");
         } else {
           showToast(decode.success_mess, "success");
-          let mtbook = decode.mtbook;
+          var mtbook = decode.mtbook;
           $("#form_txtbookid").val(mtbook?.id);
           $("#booktitle").val(mtbook?.book_title);
           $("#authorname").val(mtbook?.author_name);
           $("#publisher").val(mtbook?.publisher);
           $("#bookimage").attr("src", "/assets/img/" + mtbook?.book_img);
-          console.log("url:", mtbook?.book_img);
-          let publication_day = new Date(mtbook?.publication_day);
-          let year = publication_day.getFullYear();
-          let month = publication_day.getMonth() + 1;
-          let day = publication_day.getDate();
+          var publication_day = new Date(mtbook?.publication_day);
+          var year = publication_day.getFullYear();
+          var month = publication_day.getMonth() + 1;
+          var day = publication_day.getDate();
           $("#year").val(year);
           $("#month").val(month);
           $("#day").val(day);
         }
       },
       error: function () {
-        alert("Ajax request failed.");
+        showToast("Ajax request failed.", "error");
       },
     });
   }
@@ -415,13 +409,13 @@ function handleUpdate() {
 function handleFind() {
   var bookid = getValueById("form_txtbookid");
   if (bookid == "") {
-    alert("本IDを入力してください。"); // MSG 01
+    showToast("本IDを入力してください。", "error"); // MSG 01
     return false;
   } else if (bookid.length != 4) {
-    alert("本IDは半角英数字で入力してください。"); // MSG 02
+    showToast("本IDは半角英数字で入力してください。", "error"); // MSG 02
     return false;
   }
-  let formData = new FormData();
+  var formData = new FormData();
   var bookId = $("#form_txtbookid").val();
   formData.append("bookId", bookId);
   $.ajax({
@@ -432,20 +426,20 @@ function handleFind() {
     processData: false,
 
     success: function (response) {
-      let decode = JSON.parse(response);
+      var decode = JSON.parse(response);
       if (decode.error_mess) {
         showToast(decode.error_mess, "error");
       } else {
-        let mtbook = decode.mtbook;
+        var mtbook = decode.mtbook;
         $("#form_txtbookid").val(mtbook?.id);
         $("#booktitle").val(mtbook?.book_title);
         $("#authorname").val(mtbook?.author_name);
         $("#publisher").val(mtbook?.publisher);
         $("#bookimage").attr("src", "/assets/img/" + mtbook?.book_img);
-        let publication_day = new Date(mtbook?.publication_day);
-        let year = publication_day.getFullYear();
-        let month = publication_day.getMonth() + 1;
-        let day = publication_day.getDate();
+        var publication_day = new Date(mtbook?.publication_day);
+        var year = publication_day.getFullYear();
+        var month = publication_day.getMonth() + 1;
+        var day = publication_day.getDate();
         $("#year").val(year);
         $("#month").val(month);
         $("#day").val(day);
@@ -453,7 +447,7 @@ function handleFind() {
       }
     },
     error: function (xhr, textStatus, errorThrown) {
-      alert("Ajax request failed.");
+      showToast("Ajax request failed.", "error");
     },
   });
   return false;
@@ -464,61 +458,62 @@ function handleDelete() {
   var flag = true;
   var bookid = getValueById("form_txtbookid");
   if (bookid == "") {
-    alert("本IDを入力してください。"); // MSG 01
+    showToast("本IDを入力してください。", "error"); // MSG 01
     flag = false;
   } else if (bookid.length != 4) {
-    alert("本IDは半角英数字で入力してください。"); // MSG 02
+    showToast("本IDは半角英数字で入力してください。", "error"); // MSG 02
     flag = false;
   }
 
-  let formData = new FormData();
-  var bookId = $("#form_txtbookid").val();
-  formData.append("bookId", bookId);
-  $.ajax({
-    url: "/masterbook/delete",
-    type: "POST",
-    data: formData,
-    contentType: false,
-    processData: false,
+  if (flag) {
+    var formData = new FormData();
+    var bookId = $("#form_txtbookid").val();
+    formData.append("bookId", bookId);
+    $.ajax({
+      url: "/masterbook/delete",
+      type: "POST",
+      data: formData,
+      contentType: false,
+      processData: false,
 
-    success: function (response) {
-      let decode = JSON.parse(response);
-      if (decode.error_mess) {
-        showToast(decode.error_mess, "error");
-      } else {
-        $("#form_txtbookid").val("");
-        $("#booktitle").val("");
-        $("#authorname").val("");
-        $("#publisher").val("");
-        $("#bookimage").attr("src", "");
-        $("#year").val("");
-        $("#month").val("");
-        $("#day").val("day");
-        $("#form_book_img").val("");
-        showToast(decode.success_mess, "success");
-      }
-    },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Ajax request failed.");
-    },
-  });
-  //   return flag;
+      success: function (response) {
+        var decode = JSON.parse(response);
+        if (decode.error_mess) {
+          showToast(decode.error_mess, "error");
+        } else {
+          $("#form_txtbookid").val("");
+          $("#booktitle").val("");
+          $("#authorname").val("");
+          $("#publisher").val("");
+          $("#bookimage").attr("src", "");
+          $("#year").val("");
+          $("#month").val("");
+          $("#day").val("");
+          $("#form_book_img").val("");
+          showToast(decode.success_mess, "success");
+        }
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        showToast("Ajax request failed.", "error");
+      },
+    });
+  }
   return false;
 }
 function handleclear() {
   // book id
-  document.getElementById("form_txtbookid").value = "";
+  $("#form_txtbookid").val("");
   // book title
-  document.getElementById("booktitle").value = "";
+  $("#booktitle").val("");
   // author name
-  document.getElementById("authorname").value = "";
+  $("#authorname").val("");
   // publisher
-  document.getElementById("publisher").value = "";
+  $("#publisher").val("");
   // year
-  document.getElementById("year").value = "";
+  $("#year").val("");
   // month
-  document.getElementById("month").value = "";
+  $("#month").val("");
   // day
-  document.getElementById("day").value = "";
+  $("#day").val("");
   return false;
 }
