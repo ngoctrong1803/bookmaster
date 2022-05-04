@@ -12,7 +12,6 @@
 
 // Bootstrap the framework - THIS LINE NEEDS TO BE FIRST!
 require COREPATH.'bootstrap.php';
-
 // Add framework overload classes here
 \Autoloader::add_classes(array(
 	// Example: 'View' => APPPATH.'classes/myview.php',
@@ -33,3 +32,4 @@ Fuel::$env = Arr::get($_SERVER, 'FUEL_ENV', Arr::get($_ENV, 'FUEL_ENV', getenv('
 
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
+require APPPATH.'/config/strings.php';

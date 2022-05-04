@@ -4,9 +4,21 @@
  * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE)
  */
 //
-// Scripts
+//
+const MSG01 = "本IDを入力してください。";
+const MSG02 = "本IDは半角英数字で入力してください。";
+const MSG06 = "本タイトルを入力してください。";
+const MSG07 = "著者名を入力してください。";
+const MSG08 = "出版社を入力してください。";
+const MSG09 = "出版年月日を入力してください。";
+const MSG10 = "出版年月日は半角数字で入力してください。";
+const MSG16 = "出版年月日が不正です。";
+const MSG17 = "著者名が不正です。";
+const MSG18 = "出版社が不正です。";
+var checkSpecialCharacter = /^[A-Za-z0-9\s]+$/;
 // handle notification
 $(document).ready(function () {
+  // message error
   // if txt book id is empty all input tab will clear
   $("#form_txtbookid").keyup(function () {
     if ($("#form_txtbookid").val() == "") {
@@ -26,6 +38,7 @@ $(document).ready(function () {
     }
   });
 });
+
 function showToast(message, type) {
   setTimeout(function () {
     $("#errormessage").fadeOut("fast");
@@ -157,53 +170,67 @@ function handleAdd() {
   // check book id
   if (bookid == "") {
     flag = false;
-    showError("bookid", "本IDを入力してください。"); //MSG 01
+    showError("bookid", MSG01); //MSG 01
   } else if (bookid.length > 4) {
     flag = false;
-    showError("bookid", "本IDは半角英数字で入力してください。"); //MSG 02
+    showError("bookid", MSG02); //MSG 02
   }
 
   //check book title
   if (booktitle == "") {
     flag = false;
-    showError("booktitle", "本タイトルを入力してください。"); //MSG 06
+    showError("booktitle", MSG06); //MSG 06
   }
 
   // check author name
   if (authorname == "") {
     flag = false;
-    showError("authorname", "著者名を入力してください。"); //MSG 07
+    showError("authorname", MSG07); //MSG 07
+  } else if (!checkSpecialCharacter.test(authorname)) {
+    flag = false;
+    showError("authorname", MSG17); //MSG 17
   }
 
   // check publisher
   if (publisher == "") {
     flag = false;
-    showError("publisher", "出版社を入力してください。"); //MSG 08
+    showError("publisher", MSG08); //MSG 08
+  } else if (!checkSpecialCharacter.test(publisher)) {
+    flag = false;
+    showError("publisher", MSG18); //MSG 18
   }
 
-  //check empty date
   if (year == "") {
     flag = false;
-    showError("year", "出版年月日を入力してください。"); //MSG 09
+    showError("year", MSG09); //MSG 09
+  } else if (!Number.isInteger(Number(year))) {
+    flag = false;
+    showError("year", MSG10); //MSG 10
   } else if (!checkYear(year)) {
     flag = false;
-    showError("year", "出版年月日は半角数字で入力してください。"); //MSG 10
+    showError("year", MSG16); //MSG 16
   }
 
   if (month == "") {
     flag = false;
-    showError("month", "出版年月日を入力してください。"); //MSG 09
+    showError("month", MSG09); //MSG 09
+  } else if (!Number.isInteger(Number(month))) {
+    flag = false;
+    showError("month", MSG10); //MSG 10
   } else if (!checkMonth(month)) {
     flag = false;
-    showError("month", "出版年月日は半角数字で入力してください。"); //MSG 10
+    showError("month", MSG16); //MSG 10
   }
 
   if (day == "") {
     flag = false;
-    showError("day", "出版年月日を入力してください。"); //MSG 09
+    showError("day", MSG09); //MSG 09
+  } else if (!Number.isInteger(Number(day))) {
+    flag = false;
+    showError("day", MSG10); //MSG 10
   } else if (!checkDay(day, month, year)) {
     flag = false;
-    showError("day", "出版年月日は半角数字で入力してください。"); //MSG 10
+    showError("day", MSG16); //MSG 10
   }
   if (flag == true) {
     //========================================= handle with ajax ==========================================
@@ -296,52 +323,66 @@ function handleUpdate() {
   // check book id
   if (bookid == "") {
     flag = false;
-    showError("bookid", "本IDを入力してください。"); // MSG 01
+    showError("bookid", MSG01); // MSG 01
   } else if (bookid.length > 4) {
     flag = false;
-    showError("bookid", "本IDは半角英数字で入力してください。"); // MSG 02
+    showError("bookid", MSG02); // MSG 02
   }
   //check book title
   if (booktitle == "") {
     flag = false;
-    showError("booktitle", "本タイトルを入力してください。"); // MSG 06
+    showError("booktitle", MSG06); // MSG 06
   }
 
   // check author name
   if (authorname == "") {
     flag = false;
-    showError("authorname", "著者名を入力してください。"); // MSG 07
+    showError("authorname", MSG07); // MSG 07
+  } else if (!checkSpecialCharacter.test(authorname)) {
+    flag = false;
+    showError("authorname", MSG17); //MSG 17
   }
 
   // check publisher
   if (publisher == "") {
     flag = false;
-    showError("publisher", "出版社を入力してください。"); // MSG 08
+    showError("publisher", MSG08); // MSG 08
+  } else if (!checkSpecialCharacter.test(publisher)) {
+    flag = false;
+    showError("publisher", MSG18); //MSG 18
   }
 
-  //check empty date
   if (year == "") {
     flag = false;
-    showError("year", "出版年月日を入力してください。"); // MSG 09
+    showError("year", MSG09); //MSG 09
+  } else if (!Number.isInteger(Number(year))) {
+    flag = false;
+    showError("year", MSG10); //MSG 10
   } else if (!checkYear(year)) {
     flag = false;
-    showError("year", "出版年月日は半角数字で入力してください。"); //MSG 10
+    showError("year", MSG16); //MSG 16
   }
 
   if (month == "") {
     flag = false;
-    showError("month", "出版年月日を入力してください。"); // MSG 09
+    showError("month", MSG09); //MSG 09
+  } else if (!Number.isInteger(Number(month))) {
+    flag = false;
+    showError("month", MSG10); //MSG 10
   } else if (!checkMonth(month)) {
     flag = false;
-    showError("month", "出版年月日は半角数字で入力してください。"); // MSG 10
+    showError("month", MSG16); //MSG 10
   }
 
   if (day == "") {
     flag = false;
-    showError("day", "出版年月日を入力してください。"); // MSG 09
+    showError("day", MSG09); //MSG 09
+  } else if (!Number.isInteger(Number(day))) {
+    flag = false;
+    showError("day", MSG10); //MSG 10
   } else if (!checkDay(day, month, year)) {
     flag = false;
-    showError("day", "出版年月日は半角数字で入力してください。"); // MSG 10
+    showError("day", MSG16); //MSG 10
   }
   if (flag) {
     //========================================= handle with ajax ==========================================
@@ -409,10 +450,10 @@ function handleUpdate() {
 function handleFind() {
   var bookid = getValueById("form_txtbookid");
   if (bookid == "") {
-    showToast("本IDを入力してください。", "error"); // MSG 01
+    showToast(MSG01, "error"); // MSG 01
     return false;
   } else if (bookid.length != 4) {
-    showToast("本IDは半角英数字で入力してください。", "error"); // MSG 02
+    showToast(MSG02, "error"); // MSG 02
     return false;
   }
   var formData = new FormData();
@@ -458,10 +499,10 @@ function handleDelete() {
   var flag = true;
   var bookid = getValueById("form_txtbookid");
   if (bookid == "") {
-    showToast("本IDを入力してください。", "error"); // MSG 01
+    showToast(MSG01, "error"); // MSG 01
     flag = false;
   } else if (bookid.length != 4) {
-    showToast("本IDは半角英数字で入力してください。", "error"); // MSG 02
+    showToast(MSG02, "error"); // MSG 02
     flag = false;
   }
 
