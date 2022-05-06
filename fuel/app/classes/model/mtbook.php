@@ -10,7 +10,6 @@ class Model_MtBook extends Orm\Model{
         'publication_day',
         'insert_day',
         'update_day',
-
     );
     // find book
     public static function findBook($bookid) { 
@@ -31,7 +30,7 @@ class Model_MtBook extends Orm\Model{
             }
             return $book; 
         } catch(Exception $e) {
-            $errormessage = "サーバー処理で例外が発生しました。(fuction findBook in model)";// MSG 11
+            $errormessage = MSG05;
             $data = array('error_mess' => $errormessage);
             echo json_encode($data);
         }
@@ -45,12 +44,11 @@ class Model_MtBook extends Orm\Model{
             DB::insert('mt_books')->set($mtbookUpdate)->execute();
             $book = Model_MtBook::find($mtbook['id']);
             return $book; 
-        } catch(Exception $e){
-            $errormessage = "サーバー処理で例外が発生しました。(fuction insertBook in model)";// MSG 11
+        } catch(Exception $e) {
+            $errormessage = MSG05;
             $data = array('error_mess' => $errormessage);
             echo json_encode($data);
         }
-     
     }
     // update book
     public static function updateBook($mtbook) {   
@@ -61,12 +59,11 @@ class Model_MtBook extends Orm\Model{
             DB::update('mt_books')->set($mtbookUpdate)->where('id', '=', $mtbook['id'])->execute();
             $book = Model_MtBook::find($mtbook['id']);
             return $book; 
-        } catch(Exception $e){
-            $errormessage = "サーバー処理で例外が発生しました。(fuction updateBook in model)";// MSG 11
+        } catch(Exception $e) {
+            $errormessage = MSG05;
             $data = array('error_mess' => $errormessage);
             echo json_encode($data);
         }
-       
     }
     //delete book
     public static function deleteBook($bookid) { 
@@ -74,8 +71,8 @@ class Model_MtBook extends Orm\Model{
             $query = DB::delete('mt_books'); 
             $query = $query->where('id', '=', $bookid); 
             $result = $query->execute(); 
-        } catch(Exception $e){
-            $errormessage = "サーバー処理で例外が発生しました。(fuction deleteBook in model)";// MSG 11
+        } catch(Exception $e) {
+            $errormessage = MSG05;
             $data = array('error_mess' => $errormessage);
             echo json_encode($data);
         }
